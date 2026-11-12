@@ -15,7 +15,10 @@
 - `상추훈련_백테스트.html`, 리스탈 투자 일지 시트, `OBIL_TRACER_작업지시서.md`(MyAssetDashBD 레포용), 템플릿 3종
 - claude.ai 프로젝트의 과거 대화는 이전되지 않음 (핵심 맥락은 HISTORY에 정리됨)
 
-## 다른 PC(회사)에서 쓰기
-1. `git clone https://github.com/jungukeu-ctrl/buildup-trading` 후 해당 폴더에서 Claude Code 실행
-2. Notion 커넥터를 Claude Code에 연결 (`/mcp`), 매매기록 페이지 접근용
-3. 작업 후 `git pull` → 수정 → `git commit` → `git push`로 양쪽 PC 동기화 (HISTORY 갱신 시 특히)
+## 다른 PC(회사)에서 쓰기 — 클라우드 방식 (기본)
+1. 브라우저에서 claude.ai/code 를 열고 `jungukeu-ctrl/buildup-trading` 레포를 선택해 세션 시작 (설치 불필요). `CLAUDE.md`와 `memory/`는 자동으로 읽힌다.
+2. Notion 커넥터는 claude.ai 설정의 커넥터에서 켜져 있어야 한다. 세션에서 Notion 도구가 안 보이면 이 설정부터 확인.
+3. 클라우드 작업 공간은 세션이 끝나면 사라진다. HISTORY·memory를 수정한 세션은 끝에 반드시 commit + push 한다 ("커밋·푸시해줘").
+
+## (선택) 로컬 PC에서 쓰기
+`git clone https://github.com/jungukeu-ctrl/buildup-trading` 후 그 폴더에서 Claude Code 실행, `/mcp`로 Notion 연결. 작업 전 `git pull`, 후 `git push`.
