@@ -15,6 +15,8 @@
 | 일반비중매매 계좌 성적 | https://app.notion.com/p/3b368e1fa04c8176b021e93260b28930 | 연습계좌 라운드 이력 |
 | 일반매매 물량차수 및 계좌 순환 매매 기준 | https://app.notion.com/p/3b368e1fa04c8124bcc0c51557bd215e | 비중/차수 기준표 |
 | 일반매매 Discord 체크포인트 관리 가이드 | https://app.notion.com/p/3b368e1fa04c812a9c69e6fdc97c840f | Discord 메시지 체크 절차 |
+| 성호전자_20261028 (진행 중) | https://app.notion.com/p/40768e1fa04c812da6c2d62dbe6fde90 | 10/28~ 현재 라운드 (직접 update-page) |
+| 성호전자_20261007 (종료) | https://app.notion.com/p/3f968e1fa04c81258fe6cf2ae254acbd | 10/07~10/28 라운드, 최종 −41,013원 |
 | 성호전자_20260930 (진행 중이던 시점 기록, 이후 라운드는 HISTORY 참고) | https://app.notion.com/p/3eb68e1fa04c8168ab05d5b9c836213c | 09/30 포지션 이월 시작 라운드 |
 | 성호전자_20260921 (종료) | https://app.notion.com/p/3e268e1fa04c8134b60cff0b9ed8aa6b | 09/21~09/30 라운드, 최종 −1,205원 |
 | 성호전자_20260805 (종료) | https://app.notion.com/p/3b368e1fa04c813ab14ef8675b1e5e53 | 08/05~09/18 라운드, 최종 +20,184원 |

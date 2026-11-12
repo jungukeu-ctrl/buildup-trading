@@ -43,7 +43,7 @@
 - [일반비중매매 계좌 성적](https://app.notion.com/p/3b368e1fa04c8176b021e93260b28930) — 라운드 이력
 - [일반매매 물량차수 및 계좌 순환 매매 기준](https://app.notion.com/p/3b368e1fa04c8124bcc0c51557bd215e)
 - [일반매매 Discord 체크포인트 관리 가이드](https://app.notion.com/p/3b368e1fa04c812a9c69e6fdc97c840f)
-- 진행 중 라운드 페이지의 최신 링크는 `memory/index.md`와 `memory/HISTORY.md` 참고 (현재 성호전자_20261007).
+- 진행 중 라운드 페이지의 최신 링크는 `memory/index.md`와 `memory/HISTORY.md` 참고 (현재 성호전자_20261028).
 - Notion MCP로 실시간 수정 가능. 라운드 종료 시 두 "계좌 성적" 페이지의 이력 표에 종료일·실현손익·수익률을 채운다. 새 라운드 페이지는 최상위 페이지 하위에 생성.
 - Claude Code에서는 Notion MCP 커넥터를 연결해야 한다 (`/mcp`). 연결 전에는 Notion 읽기·쓰기를 하지 않고 사용자에게 알린다.
 
