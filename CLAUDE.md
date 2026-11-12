@@ -85,5 +85,7 @@ Notion 매매기록 페이지는 **장 종료 후 한 번만** 업데이트한�
 CLAUDE.md          이 파일
 memory/            프로젝트 메모리 (HISTORY, index, method, system-and-workflow, preferences, tools)
 knowledge/         매매 가이드·교육 자료 (프로젝트 문서 + Google Docs 사본)
+tools/             상추훈련_백테스트.html
+specs/             MyAssetDashBD용 작업지시서 보관본 (OBIL_TRACER)
 MIGRATION.md       이전 내역과 아직 옮기지 못한 자료 목록
 ```

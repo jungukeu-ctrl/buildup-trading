@@ -21,7 +21,7 @@ aliases: [Notion MCP, Firebase, OBIL Tracer, MyAssetDashBD]
 - Firebase project: `my-asset-dashboard-9e6f9`; DB URL: `https://my-asset-dashboard-9e6f9-default-rtdb.firebaseio.com`
 - Dashboard: `https://jungukeu-ctrl.github.io/MyAssetDashBD/`
 - "Claude에 공유" button copies Firebase state as JSON for pasting into chat
-- OBIL Tracer feature spec exists (`OBIL_TRACER_작업지시서.md`, claude.ai 프로젝트 문서); Firebase writes require authenticated tokens from the deployed app
+- OBIL Tracer feature spec exists (`specs/OBIL_TRACER_작업지시서.md`, MyAssetDashBD용 보관본); Firebase writes require authenticated tokens from the deployed app
 
 ## Key project files (저장소 내 위치)
 
@@ -30,6 +30,8 @@ aliases: [Notion MCP, Firebase, OBIL Tracer, MyAssetDashBD]
 - `knowledge/03_매매_기법_및_실전팁.md` — 1-2-3 박스, 보합권 매매, 수익 극대화 팁, 계좌 관리 포인트
 - `knowledge/00_프로젝트_개요.md` — 두 계좌의 목적과 매매 방식 3유형
 - `knowledge/시합장_판정_및_밸런싱_정석.md` — 시즌4 시합장 U1~D3 판정과 밸런싱
-- `knowledge/discord/` — 주빌•A Discord 가이드 발췌 (매매방법 채널, 빌드업가이드2~5, 활용방법, 알에프텍가이드)
+- Discord 교육자료·로그(매매방법 채널, 빌드업가이드2~5, 활용방법, 로그)는 Notion "자료 보관" 페이지 (링크는 `MIGRATION.md`/`memory/index.md`); 알에프텍가이드는 Drive
+- `tools/상추훈련_백테스트.html` — 상추훈련 백테스트 도구 (JSON 로드)
+- `specs/OBIL_TRACER_작업지시서.md` — MyAssetDashBD용 작업지시서 보관본
 - 그 외 Discord 로그 전문과 인터뷰 등 미이전 자료는 `MIGRATION.md` 참고
 - `restyle_state.md` (GitHub: `jungukeu-ctrl/MyAssetDashBD`) — 대시보드 쪽 세션 연속성 파일

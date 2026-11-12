@@ -67,7 +67,7 @@
 
 ## 코드 작업
 
-이 저장소에는 코드가 없다. 대시보드 코드(MyAssetDashBD)가 필요한 작업은 해당 저장소에서 진행하며, 변경 전 계획·보고 → 승인 후 구현 규칙은 그 저장소의 CLAUDE.md를 따른다. (과거 claude.ai에서는 코드작업지시서를 작성해 Claude Code에 위임하는 방식이었음. `knowledge/` 에 보관하지 않은 `OBIL_TRACER_작업지시서.md`는 MyAssetDashBD 용 지시서다.)
+이 저장소에는 코드가 없다. 대시보드 코드(MyAssetDashBD)가 필요한 작업은 해당 저장소에서 진행하며, 변경 전 계획·보고 → 승인 후 구현 규칙은 그 저장소의 CLAUDE.md를 따른다. (과거 claude.ai에서는 코드작업지시서를 작성해 Claude Code에 위임하는 방식이었음. `specs/OBIL_TRACER_작업지시서.md`는 MyAssetDashBD 용 지시서 보관본이다.)
 
 ---
 

@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>상추훈련 백테스트</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:#0f0f0f;color:#e8e6e0;min-height:100vh;}
+  .container{max-width:900px;margin:0 auto;padding:16px;}
+
+  /* 상단 헤더 */
+  .top{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:12px 16px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;}
+  .top-title{font-size:15px;font-weight:600;color:#f0ede8;}
+  .top-sub{font-size:11px;color:#666;margin-left:auto;}
+  .file-btn{padding:6px 14px;background:#2a2a2a;border:1px solid #3a3a3a;border-radius:6px;color:#aaa;font-size:12px;cursor:pointer;transition:all .15s;}
+  .file-btn:hover{background:#333;color:#e8e6e0;}
+  #file-input{display:none;}
+  .stock-tag{font-size:12px;color:#7F77DD;background:#26215C;border:1px solid #3C3489;border-radius:99px;padding:2px 10px;}
+
+  /* 날짜/가격 표시 */
+  .date-bar{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:8px 14px;background:#161616;border:1px solid #222;border-radius:8px;}
+  .cur-date{font-size:13px;font-weight:500;color:#e8e6e0;}
+  .cur-price{font-size:16px;font-weight:700;color:#f0ede8;}
+  .price-diff{font-size:11px;padding:2px 8px;border-radius:99px;}
+  .price-up{background:#3d1212;color:#E24B4A;}
+  .price-dn{background:#0d2035;color:#5B9BD5;}
+  .price-flat{background:#222;color:#666;}
+
+  /* 차트 */
+  .chart-wrap{background:#141414;border:1px solid #222;border-radius:10px;margin-bottom:10px;overflow:hidden;}
+  #cv{display:block;cursor:crosshair;width:100%;}
+  .scroll-row{display:flex;align-items:center;gap:10px;padding:6px 14px;border-top:1px solid #1e1e1e;}
+  .scroll-row input[type=range]{flex:1;accent-color:#7F77DD;height:3px;}
+  .scroll-lbl{font-size:10px;color:#444;white-space:nowrap;}
+
+  /* 통계 그리드 */
+  .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#222;border:1px solid #222;border-radius:10px;overflow:hidden;margin-bottom:8px;}
+  .stat{background:#141414;padding:10px 12px;}
+  .slbl{font-size:10px;color:#555;margin-bottom:3px;}
+  .sval{font-size:14px;font-weight:600;color:#e8e6e0;}
+  .profit{color:#E24B4A;}
+  .loss{color:#5B9BD5;}
+  .muted{color:#444;}
+  .warn{color:#D4A017;font-weight:700;}
+
+  /* 알림 */
+  .notice{display:none;padding:10px 14px;border-radius:8px;font-size:12px;font-weight:500;margin-bottom:10px;line-height:1.6;}
+  .notice.auto{background:#2a1a00;color:#D4A017;border:1px solid #4a3000;}
+  .notice.info{background:#0d2035;color:#5B9BD5;border:1px solid #1a3a5c;}
+  .notice.err{background:#2a0d0d;color:#E24B4A;border:1px solid #4a1a1a;}
+
+  /* 버튼 */
+  .btns{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:10px;}
+  .btn{padding:12px 6px;border-radius:8px;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all .12s;font-family:inherit;}
+  .bmain{font-size:15px;font-weight:700;}
+  .bsub{font-size:10px;opacity:.7;}
+  .buy-btn{background:#2a0d0d;color:#E24B4A;border:1px solid #4a1a1a;}
+  .buy-btn:hover{background:#3a1414;}
+  .sell-btn{background:#0d2035;color:#5B9BD5;border:1px solid #1a3a5c;}
+  .sell-btn:hover{background:#142840;}
+  .next-btn{background:#26215C;color:#AFA9EC;border:1px solid #3C3489;}
+  .next-btn:hover{background:#2f2a6e;}
+  .reset-btn{background:#1a1a1a;color:#666;border:1px solid #2a2a2a;}
+  .reset-btn:hover{background:#222;color:#999;}
+
+  /* 거래 내역 */
+  .log-wrap{background:#141414;border:1px solid #222;border-radius:10px;overflow:hidden;}
+  .log-hdr{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid #1e1e1e;}
+  .log-hdr-title{font-size:12px;font-weight:600;color:#888;}
+  .log-cnt{font-size:11px;color:#444;}
+  .log-body{max-height:240px;overflow-y:auto;}
+  .log-body::-webkit-scrollbar{width:4px;}
+  .log-body::-webkit-scrollbar-track{background:#141414;}
+  .log-body::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:2px;}
+  .lempty{padding:20px;text-align:center;font-size:12px;color:#444;}
+  .li{display:flex;align-items:center;gap:8px;padding:7px 14px;border-bottom:1px solid #1a1a1a;font-size:12px;}
+  .li:last-child{border-bottom:none;}
+  .li:hover{background:#191919;}
+  .lbadge{padding:2px 7px;border-radius:99px;font-size:10px;font-weight:600;white-space:nowrap;}
+  .lb{background:#2a0d0d;color:#E24B4A;}
+  .ls{background:#0d2035;color:#5B9BD5;}
+  .la{background:#2a1a00;color:#D4A017;}
+  .ldate{color:#444;min-width:50px;font-size:10px;}
+  .lprice{color:#e8e6e0;font-weight:600;min-width:55px;}
+  .lsh{color:#555;min-width:38px;}
+  .ldet{flex:1;text-align:right;}
+
+  /* 파일 드롭 안내 */
+  .drop-area{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;height:300px;border:2px dashed #2a2a2a;border-radius:10px;color:#444;font-size:13px;cursor:pointer;transition:all .2s;margin-bottom:10px;}
+  .drop-area:hover{border-color:#7F77DD;color:#7F77DD;}
+  .drop-icon{font-size:40px;opacity:.5;}
+
+  /* 결과 요약 */
+  .summary{display:none;padding:12px 16px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;margin-bottom:10px;font-size:13px;}
+  .sum-row{display:flex;justify-content:space-between;margin-bottom:4px;}
+  .sum-lbl{color:#666;}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="top">
+    <span class="top-title">📈 상추훈련 백테스트</span>
+    <span class="stock-tag" id="stock-tag">데이터 없음</span>
+    <span class="top-sub" id="top-sub">자본금 100만원</span>
+    <label class="file-btn" for="file-input">📂 JSON 열기</label>
+    <input type="file" id="file-input" accept=".json">
+  </div>
+
+  <!-- 파일 없을 때 드롭 안내 -->
+  <div class="drop-area" id="drop-area" onclick="document.getElementById('file-input').click()">
+    <div class="drop-icon">📂</div>
+    <div>JSON 파일을 클릭하거나 드래그해서 불러오세요</div>
+    <div style="font-size:11px;color:#333">naver_stock_fetcher.py로 생성한 .json 파일</div>
+  </div>
+
+  <!-- 차트 (데이터 로드 후 표시) -->
+  <div id="main" style="display:none">
+    <div class="date-bar">
+      <span class="cur-date" id="cur-date">—</span>
+      <span class="cur-price" id="cur-price">—</span>
+      <span class="price-diff price-flat" id="price-diff">—</span>
+      <span style="margin-left:auto;font-size:11px;color:#444" id="range-info">—</span>
+    </div>
+
+    <div class="chart-wrap">
+      <canvas id="cv" height="220"></canvas>
+      <div class="scroll-row">
+        <span class="scroll-lbl" id="sc-lbl">←</span>
+        <input type="range" id="scrl" min="0" value="0" step="1" oninput="onScroll()">
+        <span class="scroll-lbl">최신→</span>
+      </div>
+    </div>
+
+    <div class="notice" id="notice"></div>
+
+    <div class="stats-grid">
+      <div class="stat"><div class="slbl">보유비중</div><div class="sval" id="s-h">0%</div></div>
+      <div class="stat"><div class="slbl">평단</div><div class="sval" id="s-a">—</div></div>
+      <div class="stat"><div class="slbl">평단대비</div><div class="sval" id="s-pp">—</div></div>
+      <div class="stat"><div class="slbl">평가손익</div><div class="sval" id="s-u">—</div></div>
+      <div class="stat"><div class="slbl">실현손익</div><div class="sval" id="s-r">—</div></div>
+      <div class="stat"><div class="slbl">일 잔여한도</div><div class="sval" id="s-l">4%</div></div>
+    </div>
+    <div class="stats-grid" style="margin-bottom:10px">
+      <div class="stat"><div class="slbl">보유현금</div><div class="sval" id="s-c">1,000,000</div></div>
+      <div class="stat"><div class="slbl">총평가금액</div><div class="sval" id="s-t">1,000,000</div></div>
+      <div class="stat"><div class="slbl">수익률</div><div class="sval" id="s-pct">0%</div></div>
+    </div>
+
+    <div class="btns">
+      <button class="btn buy-btn" onclick="doBuy()">
+        <span class="bmain">매수</span>
+        <span class="bsub">시가 기준 +2%</span>
+      </button>
+      <button class="btn sell-btn" onclick="doSell()">
+        <span class="bmain">매도</span>
+        <span class="bsub">종가 기준 −2%</span>
+      </button>
+      <button class="btn next-btn" onclick="doNext()">
+        <span class="bmain">다음날 →</span>
+        <span class="bsub">규칙 자동적용</span>
+      </button>
+      <button class="btn reset-btn" onclick="resetAll()">
+        <span class="bmain">초기화</span>
+        <span class="bsub">처음부터</span>
+      </button>
+    </div>
+
+    <div class="log-wrap">
+      <div class="log-hdr">
+        <span class="log-hdr-title">거래 내역</span>
+        <span class="log-cnt" id="lcnt">0건</span>
+      </div>
+      <div class="log-body" id="logbody">
+        <div class="lempty">캔들을 클릭하거나 다음날→ 버튼으로 시작하세요</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const CAP = 1000000;
+let DATA = [], N = 0, WIN = 80;
+let sOff = 0, selIdx = -1;
+const st = {cash:CAP,shares:0,avg:0,real:0,tBuy:0,tSell:0,autoTh:0,log:[],cur:-1};
+
+// ── 파일 로드 ──
+document.getElementById('file-input').addEventListener('change', e => {
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ev => loadData(JSON.parse(ev.target.result), f.name);
+  r.readAsText(f);
+});
+const dropArea = document.getElementById('drop-area');
+dropArea.addEventListener('dragover', e => { e.preventDefault(); dropArea.style.borderColor='#7F77DD'; });
+dropArea.addEventListener('dragleave', () => { dropArea.style.borderColor='#2a2a2a'; });
+dropArea.addEventListener('drop', e => {
+  e.preventDefault(); dropArea.style.borderColor='#2a2a2a';
+  const f = e.dataTransfer.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ev => loadData(JSON.parse(ev.target.result), f.name);
+  r.readAsText(f);
+});
+
+function loadData(data, fname) {
+  DATA = data; N = DATA.length;
+  WIN = Math.min(80, N);
+  sOff = Math.max(0, N - WIN);
+  const scrl = document.getElementById('scrl');
+  scrl.max = Math.max(0, N - WIN);
+  scrl.value = sOff;
+  // 종목명 파싱 (파일명에서)
+  const parts = fname.replace('.json','').split('_');
+  const stockName = parts[0] || '종목';
+  document.getElementById('stock-tag').textContent = stockName + ' · ' + N + '일';
+  document.getElementById('top-sub').textContent = DATA[0].d + ' ~ ' + DATA[N-1].d + ' · 자본금 100만원';
+  document.getElementById('range-info').textContent = N + '거래일';
+  document.getElementById('drop-area').style.display = 'none';
+  document.getElementById('main').style.display = 'block';
+  resetAll();
+}
+
+// ── 캔버스 ──
+const cv = document.getElementById('cv');
+let CW = 800, CH = 220;
+function resize() {
+  CW = cv.parentElement.clientWidth || 800;
+  cv.width = CW; cv.height = CH;
+  draw();
+}
+
+function onScroll() {
+  sOff = parseInt(document.getElementById('scrl').value);
+  document.getElementById('sc-lbl').textContent = DATA[sOff] ? DATA[sOff].d.slice(5) + ' ~' : '←';
+  draw();
+}
+
+function draw() {
+  if(!DATA.length) return;
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0, 0, CW, CH);
+  const vis = DATA.slice(sOff, sOff + WIN);
+  if(!vis.length) return;
+
+  const pad = {l:8, r:60, t:16, b:24};
+  const pw = CW - pad.l - pad.r, ph = CH - pad.t - pad.b;
+
+  let mn = Math.min(...vis.map(d=>d.l)), mx = Math.max(...vis.map(d=>d.h));
+  const rng = mx - mn || 1;
+  mn -= rng * 0.06; mx += rng * 0.06;
+
+  const px = i => pad.l + pw * (i - sOff) / WIN;
+  const py = v => pad.t + ph * (mx - v) / (mx - mn);
+  const cw = Math.max(1.5, pw / WIN - 1.2);
+
+  // 그리드
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.lineWidth = 0.5;
+  for(let i=0; i<=4; i++) {
+    const v = mn + (mx-mn)*i/4, y = py(v);
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(CW-pad.r, y); ctx.stroke();
+    ctx.fillStyle = '#3a3a3a'; ctx.font = '9px sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText(Math.round(v).toLocaleString(), CW-pad.r+4, y+3);
+  }
+
+  // 평단선
+  if(st.avg > 0) {
+    const y = py(st.avg);
+    ctx.strokeStyle = '#D4A017'; ctx.lineWidth = 1; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(CW-pad.r, y); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#D4A017'; ctx.font = 'bold 9px sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText('평단 ' + Math.round(st.avg).toLocaleString(), pad.l+3, y-4);
+  }
+
+  // 캔들
+  vis.forEach((d, i) => {
+    const xi = sOff + i, x = px(xi + 0.5), isUp = d.c >= d.o;
+    const col = isUp ? '#E24B4A' : '#5B9BD5';
+
+    // 선택 하이라이트
+    if(xi === selIdx) {
+      ctx.fillStyle = 'rgba(127,119,221,0.15)';
+      ctx.fillRect(x-cw/2-1, pad.t, cw+2, ph);
+    }
+
+    // 위꼬리
+    ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(x, py(d.h)); ctx.lineTo(x, py(d.l)); ctx.stroke();
+
+    // 몸통
+    const yo = py(d.o), yc = py(d.c);
+    const by = Math.min(yo, yc), bh = Math.max(1, Math.abs(yc - yo));
+    ctx.fillStyle = col;
+    ctx.fillRect(x - cw/2, by, cw, bh);
+
+    // 현재 위치 마커
+    if(xi === st.cur) {
+      ctx.fillStyle = '#7F77DD';
+      ctx.beginPath(); ctx.arc(x, pad.t+ph+12, 3, 0, Math.PI*2); ctx.fill();
+    }
+  });
+
+  // 날짜 라벨 (5개)
+  ctx.fillStyle = '#333'; ctx.font = '9px sans-serif'; ctx.textAlign = 'center';
+  const step = Math.floor(WIN / 5);
+  for(let i=0; i<WIN; i+=step) {
+    const xi = sOff+i;
+    if(xi < N) {
+      const x = px(xi+0.5);
+      ctx.fillText(DATA[xi].d.slice(5), x, CH-6);
+    }
+  }
+}
+
+cv.addEventListener('click', e => {
+  const r = cv.getBoundingClientRect();
+  const mx = (e.clientX - r.left) * (CW / r.width);
+  const pad_l = 8, pad_r = 60;
+  const pw = CW - pad_l - pad_r;
+  const xi = Math.floor((mx - pad_l) / pw * WIN) + sOff;
+  if(xi >= 0 && xi < N) { selIdx = xi; clickDay(xi); }
+});
+
+// ── 매매 로직 ──
+function clickDay(idx) {
+  selIdx = idx;
+  const d = DATA[idx];
+  // 날짜 바 업데이트
+  document.getElementById('cur-date').textContent = d.d;
+  document.getElementById('cur-price').textContent = d.c.toLocaleString() + '원';
+  const prev = idx > 0 ? DATA[idx-1].c : d.c;
+  const diff = d.c - prev, pct = ((diff/prev)*100).toFixed(2);
+  const el = document.getElementById('price-diff');
+  if(diff > 0) { el.textContent = '+'+diff.toLocaleString()+' (+'+pct+'%)'; el.className='price-diff price-up'; }
+  else if(diff < 0) { el.textContent = diff.toLocaleString()+' ('+pct+'%)'; el.className='price-diff price-dn'; }
+  else { el.textContent = '보합'; el.className='price-diff price-flat'; }
+
+  // 자동매도 체크
+  let msgs = [];
+  if(st.shares > 0 && st.avg > 0) {
+    const maxTh = Math.floor((d.h / st.avg - 1) * 100);
+    while(maxTh > st.autoTh) {
+      const nt = st.autoTh + 1, sp = Math.round(st.avg * (1 + nt/100));
+      const sh = Math.min(Math.floor(CAP * 0.01 / st.avg), st.shares);
+      if(sh > 0) { exec('auto', sh, sp, idx); msgs.push('+'+nt+'%'); }
+      else break;
+      if(st.shares <= 0) break;
+    }
+  }
+  if(msgs.length) showN('⭐ 자동매도 '+msgs.length+'회 실행 — '+msgs.join(', ')+'\n(평단 대비 각 1% 구간 달성 시 1% 자동 매도)', 'auto');
+  else hideN();
+
+  if(idx > st.cur) { st.tBuy = 0; st.tSell = 0; st.cur = idx; }
+  render(); draw();
+}
+
+function exec(type, sh, price, idx) {
+  const d = DATA[idx >= 0 ? idx : st.cur];
+  if(type === 'buy') {
+    st.avg = st.shares > 0 ? (st.shares*st.avg + sh*price) / (st.shares+sh) : price;
+    st.shares += sh; st.cash -= sh*price; st.tBuy += sh*price; st.autoTh = 0;
+    st.log.unshift({day:d.d, type, price, sh, avg:st.avg});
+  } else {
+    const real = (price - st.avg) * sh;
+    st.shares -= sh; st.cash += sh*price; st.real += real; st.tSell += sh*price;
+    if(type === 'auto') st.autoTh++;
+    if(st.shares === 0) { st.avg = 0; st.autoTh = 0; }
+    st.log.unshift({day:d.d, type, price, sh, real});
+  }
+}
+
+function doBuy() {
+  if(selIdx < 0) { showN('차트에서 날짜를 먼저 클릭하세요', 'info'); return; }
+  const d = DATA[selIdx];
+  const lim = CAP*0.04, rem = lim - st.tBuy + st.tSell, want = CAP*0.02;
+  if(want > rem + 0.5) { showN('일 한도 초과! 잔여: '+Math.round(Math.max(0,rem)).toLocaleString()+'원 ('+((Math.max(0,rem)/CAP)*100).toFixed(1)+'%)', 'err'); return; }
+  const sh = Math.floor(want / d.o);
+  if(sh <= 0) { showN('매수 수량 부족 (1주 미만)', 'err'); return; }
+  if(sh*d.o > st.cash) { showN('현금 부족: '+Math.round(st.cash).toLocaleString()+'원', 'err'); return; }
+  exec('buy', sh, d.o, selIdx);
+  if(selIdx > st.cur) { st.tBuy = sh*d.o; st.tSell = 0; st.cur = selIdx; }
+  hideN(); render(); draw();
+}
+
+function doSell() {
+  if(selIdx < 0) { showN('차트에서 날짜를 먼저 클릭하세요', 'info'); return; }
+  if(st.shares <= 0) { showN('보유 주식이 없습니다', 'info'); return; }
+  const d = DATA[selIdx];
+  const sh = Math.min(Math.floor(CAP*0.02 / st.avg), st.shares);
+  if(sh <= 0) { showN('매도 수량 부족', 'info'); return; }
+  exec('sell', sh, d.c, selIdx);
+  hideN(); render(); draw();
+}
+
+function doNext() {
+  if(!N) return;
+  const ni = (st.cur >= 0) ? st.cur + 1 : 0;
+  if(ni >= N) { showN('마지막 날짜입니다', 'info'); return; }
+  st.tBuy = 0; st.tSell = 0; st.cur = ni; selIdx = ni;
+  const d = DATA[ni];
+
+  // 자동매도
+  if(st.shares > 0 && st.avg > 0) {
+    const maxTh = Math.floor((d.h / st.avg - 1) * 100);
+    while(maxTh > st.autoTh) {
+      const nt = st.autoTh+1, sp = Math.round(st.avg*(1+nt/100));
+      const sh = Math.min(Math.floor(CAP*0.01/st.avg), st.shares);
+      if(sh > 0) exec('auto', sh, sp, ni); else break;
+      if(st.shares <= 0) break;
+    }
+  }
+  // 자동매수 (일 한도 내)
+  const rem = CAP*0.04 - st.tBuy + st.tSell, want = CAP*0.02;
+  if(want <= rem+0.5 && want <= st.cash) {
+    const sh = Math.floor(want / d.o);
+    if(sh > 0) exec('buy', sh, d.o, ni);
+  }
+
+  // 스크롤 따라가기
+  if(ni > sOff + WIN - 6) {
+    sOff = Math.min(N-WIN, ni - WIN + 10);
+    document.getElementById('scrl').value = sOff;
+  }
+
+  // 날짜 바
+  document.getElementById('cur-date').textContent = d.d;
+  document.getElementById('cur-price').textContent = d.c.toLocaleString() + '원';
+  const prev = ni > 0 ? DATA[ni-1].c : d.c;
+  const diff = d.c - prev, pct = ((diff/prev)*100).toFixed(2);
+  const el = document.getElementById('price-diff');
+  if(diff > 0) { el.textContent = '+'+diff.toLocaleString()+' (+'+pct+'%)'; el.className='price-diff price-up'; }
+  else if(diff < 0) { el.textContent = diff.toLocaleString()+' ('+pct+'%)'; el.className='price-diff price-dn'; }
+  else { el.textContent = '보합'; el.className='price-diff price-flat'; }
+
+  hideN(); render(); draw();
+}
+
+function resetAll() {
+  Object.assign(st, {cash:CAP,shares:0,avg:0,real:0,tBuy:0,tSell:0,autoTh:0,log:[],cur:-1});
+  selIdx = -1;
+  document.getElementById('cur-date').textContent = '날짜 클릭하여 시작';
+  document.getElementById('cur-price').textContent = '—';
+  document.getElementById('price-diff').textContent = '—';
+  document.getElementById('price-diff').className = 'price-diff price-flat';
+  hideN(); render(); draw();
+}
+
+function showN(m, c) { const e=document.getElementById('notice'); e.innerHTML=m.replace('\n','<br>'); e.className='notice '+c; e.style.display='block'; }
+function hideN() { document.getElementById('notice').style.display='none'; }
+function fmt(n) { return Number(n).toLocaleString('ko-KR'); }
+function pnl(n) {
+  if(!n || n===0) return '<span class="muted">—</span>';
+  return '<span class="'+(n>0?'profit':'loss')+'">'+(n>0?'+':'')+fmt(Math.round(n))+'원</span>';
+}
+
+function render() {
+  const idx = selIdx >= 0 ? selIdx : st.cur;
+  const p = idx >= 0 ? DATA[idx].c : 0;
+  const hp = p > 0 ? st.shares*p/CAP*100 : 0;
+  const up = st.shares * (p - st.avg);
+  const pp = st.avg > 0 && p > 0 ? (p/st.avg-1)*100 : 0;
+  const lim = CAP*0.04, rem = Math.max(0, lim-st.tBuy+st.tSell);
+  const total = st.cash + st.shares*p;
+  const totalPct = (total/CAP-1)*100;
+
+  document.getElementById('s-h').textContent = hp.toFixed(1)+'%';
+  document.getElementById('s-a').textContent = st.avg > 0 ? fmt(Math.round(st.avg))+'원' : '—';
+
+  let ppH = '<span class="muted">—</span>';
+  if(st.shares > 0 && p > 0) {
+    const c = pp>=0?'profit':'loss', s = pp>=0?'+':'';
+    ppH = '<span class="'+c+'">'+s+pp.toFixed(2)+'%</span>';
+    if(st.autoTh > 0) ppH += '<span style="font-size:10px;color:#444"> ('+st.autoTh+'%완료)</span>';
+  }
+  document.getElementById('s-pp').innerHTML = ppH;
+  document.getElementById('s-u').innerHTML = st.shares>0&&p>0 ? pnl(up) : '<span class="muted">—</span>';
+  document.getElementById('s-r').innerHTML = pnl(st.real);
+  document.getElementById('s-l').innerHTML = '<span class="'+(rem<lim*0.3?'warn':'')+'">'+((rem/CAP)*100).toFixed(1)+'% ('+fmt(Math.round(rem))+'원)</span>';
+  document.getElementById('s-c').textContent = fmt(Math.round(st.cash))+'원';
+
+  const tEl = document.getElementById('s-t');
+  tEl.innerHTML = total>CAP ? '<span class="profit">'+fmt(Math.round(total))+'원</span>' : total<CAP ? '<span class="loss">'+fmt(Math.round(total))+'원</span>' : fmt(Math.round(total))+'원';
+
+  const pEl = document.getElementById('s-pct');
+  if(totalPct > 0) pEl.innerHTML = '<span class="profit">+'+totalPct.toFixed(2)+'%</span>';
+  else if(totalPct < 0) pEl.innerHTML = '<span class="loss">'+totalPct.toFixed(2)+'%</span>';
+  else pEl.textContent = '0%';
+
+  document.getElementById('lcnt').textContent = st.log.length+'건';
+  const lb = document.getElementById('logbody');
+  if(!st.log.length) { lb.innerHTML='<div class="lempty">캔들을 클릭하거나 다음날→ 버튼으로 시작하세요</div>'; return; }
+  lb.innerHTML = st.log.map(t => {
+    const lbl = t.type==='buy'?'매수':t.type==='auto'?'자동매도':'매도';
+    const cls = t.type==='buy'?'lb':t.type==='auto'?'la':'ls';
+    const det = t.type==='buy' ? '평단→'+fmt(Math.round(t.avg))+'원' : (t.real>=0?'+':'')+fmt(Math.round(t.real))+'원';
+    const dc = t.type!=='buy'?(t.real>=0?'profit':'loss'):'';
+    const sh_str = fmt(t.sh)+'주';
+    return `<div class="li"><span class="lbadge ${cls}">${lbl}</span><span class="ldate">${t.day.slice(5)}</span><span class="lprice">${fmt(t.price)}원</span><span class="lsh">${sh_str}</span><span class="ldet ${dc}">${det}</span></div>`;
+  }).join('');
+}
+
+window.addEventListener('resize', resize);
+window.addEventListener('load', () => { setTimeout(resize, 100); });
+</script>
+</body>
+</html>
