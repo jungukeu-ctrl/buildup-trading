@@ -50,7 +50,7 @@ aliases: [비중매매, 리밸런싱, 손익비, 슬랏평가]
 - Step 2 — cumulative realized P&L from the dedicated "종목실현손익" inquiry screen, not the account main screen
 - Step 3 — 슬랏 잔여현금 = 슬랏총액 − 현재 매입금액 + 누적 실현손익 (subtract if negative)
 - Step 4 — 슬랏 기준 총 평가금 = 보유주식 평가금액 + 슬랏 잔여현금
-- Step 5 — 비중(%) = 매입금액 ÷ 슬랏총액, compared against 1차 (40%) / 2차 (45%) / 3차 (65–70%)
+- Step 5 — 비중(%) = 매입금액 ÷ 슬랏총액, compared against 1차 (40%) / 1.5차 (45%) / 2차 (50%) / 2.5차 (약 55–60%) / 3차 (65–70%) (사다리 변경 2026-11-18)
 
 ## Session workflow
 
